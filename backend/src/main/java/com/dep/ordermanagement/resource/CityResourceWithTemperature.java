@@ -43,13 +43,35 @@ public class CityResourceWithTemperature {
     public ResponseEntity<?> addCityWithTemperature(@RequestBody CityWithTemperatureVM cityWithTemperatureVM){
 
         CityVM cityVM = cityWithTemperatureVM.getCity();
+        String icity = cityVM.getName();
+        String state = cityVM.getState();
+        String country = cityVM.getCountry();
+        City oldCity = null;
         City citySaveToDb = new City();
+        City city = null;
 
-        citySaveToDb.setCountry(cityVM.getCountry());
-        citySaveToDb.setName(cityVM.getName());
-        citySaveToDb.setState(cityVM.getState());
+        try {
+            oldCity = cityRepo.findCityByNameAndStateAndCountry(icity, state, country).orElseThrow(() ->
+                    new RuntimeException("city not found"));//db
+        } catch (Exception e) {
+            oldCity = null;
+        }
 
-        City city = cityRepo.save(citySaveToDb);//save que
+        if(oldCity != null){
+            citySaveToDb = oldCity;
+        }
+
+
+
+
+        if(oldCity== null) {
+            citySaveToDb.setCountry(cityVM.getCountry());
+            citySaveToDb.setName(cityVM.getName());
+            citySaveToDb.setState(cityVM.getState());
+            city = cityRepo.save(citySaveToDb);//save que
+        }//        }
+
+        //City city = cityRepo.save(citySaveToDb);//save que
 
 
         for (TemperatureVM t : cityWithTemperatureVM.getTemperatureList()) {
