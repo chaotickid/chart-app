@@ -69,7 +69,9 @@ public class CityResourceWithTemperature {
             citySaveToDb.setName(cityVM.getName());
             citySaveToDb.setState(cityVM.getState());
             city = cityRepo.save(citySaveToDb);//save que
-        }//        }
+        }else{
+            city = cityRepo.save(citySaveToDb);//save que
+        }
 
         //City city = cityRepo.save(citySaveToDb);//save que
 
