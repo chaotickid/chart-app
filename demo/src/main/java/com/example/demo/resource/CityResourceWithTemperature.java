@@ -9,6 +9,7 @@ import com.example.demo.dao.CityVM;
 import com.example.demo.dao.CityWithTemperatureData;
 import com.example.demo.dao.CityWithTemperatureVM;
 import com.example.demo.dao.TemperatureVM;
+import com.example.demo.def.Config;
 import com.example.demo.entity.City;
 import com.example.demo.entity.Temperature;
 import com.example.demo.repository.CityRepo;
@@ -38,15 +39,32 @@ public class CityResourceWithTemperature {
     @Autowired
     private TemperatureRepo temperatureRepo;
 
+    @Autowired
+    Config config;
+
     @PostMapping("/add")
     public ResponseEntity<?> addCityWithTemperature(@RequestBody CityWithTemperatureVM cityWithTemperatureVM){
 
-        City city = cityRepo.save(cityWithTemperatureVM.getCity());//save que
+        System.out.println("Config: " + config);
+        CityVM cityVM = cityWithTemperatureVM.getCity();
+        City citySaveToDb = new City();
+
+        citySaveToDb.setCountry(cityVM.getCountry());
+        citySaveToDb.setName(cityVM.getName());
+        citySaveToDb.setState(cityVM.getState());
+
+        City city = cityRepo.save(citySaveToDb);//save que
 
 
-        for (Temperature t : cityWithTemperatureVM.getTemperatureList()) {
-            temperatureRepo.save(t);
-            city.addTemperature(t);//mapping
+        for (TemperatureVM t : cityWithTemperatureVM.getTemperatureList()) {
+            Temperature saveToDb = new Temperature();
+
+            saveToDb.setMax(t.getMax());
+            saveToDb.setMin(t.getMin());
+            saveToDb.setAvg(t.getAvg());
+
+            temperatureRepo.save(saveToDb);
+            city.addTemperature(saveToDb);//mapping
         }
 
         return new ResponseEntity<>(cityWithTemperatureVM, HttpStatus.CREATED);

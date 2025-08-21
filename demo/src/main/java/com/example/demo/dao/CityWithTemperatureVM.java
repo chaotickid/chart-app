@@ -16,24 +16,24 @@ import java.util.List;
  */
 public class CityWithTemperatureVM {
 
-    private City city;
+    private CityVM city;
 
-    private List<Temperature> temperatureList;
+    private List<TemperatureVM> temperatureList;
 
 
-    public City getCity() {
+    public CityVM getCity() {
         return city;
     }
 
-    public void setCity(City city) {
+    public void setCity(CityVM city) {
         this.city = city;
     }
 
-    public List<Temperature> getTemperatureList() {
+    public List<TemperatureVM> getTemperatureList() {
         return temperatureList;
     }
 
-    public void setTemperatureList(List<Temperature> temperatureList) {
+    public void setTemperatureList(List<TemperatureVM> temperatureList) {
         this.temperatureList = temperatureList;
     }
 }
