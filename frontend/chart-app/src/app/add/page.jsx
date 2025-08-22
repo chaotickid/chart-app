@@ -107,6 +107,9 @@ const Page = () => {
             console.log(resp);
             toast.success("City added successfully 🚀");
 
+             // 🔊 play error sound
+            const audio = new Audio("/success.mp3");
+            audio.play().catch((err) => console.warn("Audio play failed:", err));
             // sleep for 3 seconds
             await new Promise((resolve) => setTimeout(resolve, 3000));
 
@@ -115,8 +118,8 @@ const Page = () => {
             console.error(error);
             toast.error(`Failed to add city ❌ ${error.code}`);
             // 🔊 play error sound
-    const audio = new Audio("/error.mp3"); 
-    audio.play().catch((err) => console.warn("Audio play failed:", err));
+            const audio = new Audio("/error.mp3");
+            audio.play().catch((err) => console.warn("Audio play failed:", err));
         }
     };
 

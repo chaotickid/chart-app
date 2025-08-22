@@ -60,14 +60,15 @@ export default function Home() {
         updateCityData(resp.data)
         toast.success("Fetched data successfully")
         // 🔊 play error sound
-            const audio = new Audio("/success.mp3");
-            audio.play().catch((err) => console.warn("Audio play failed:", err));
+        const audio = new Audio("/success.mp3");
+        audio.play().catch((err) => console.warn("Audio play failed:", err));
       })
       .catch((error) => {
         console.error("Error:", error);
+        toast.error(`Failed to fetch city ❌ ${error.code}`);
         // 🔊 play error sound
-    const audio = new Audio("/error.mp3"); 
-    audio.play().catch((err) => console.warn("Audio play failed:", err));
+        const audio = new Audio("/error.mp3");
+        audio.play().catch((err) => console.warn("Audio play failed:", err));
       });
   };
 
@@ -105,10 +106,10 @@ export default function Home() {
           {cityData.city.name} Temperature Trend
         </h1>
         <TemperatureChart data={cityData.temperatureList} />
-        
+
       </> : <></>}
 
-<ToastContainer></ToastContainer>
+      <ToastContainer></ToastContainer>
     </div>
   );
 }
