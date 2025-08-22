@@ -10,16 +10,18 @@ import { Plus, Trash2 } from "lucide-react";
 import axios from "axios";
 // import { useRouter } from "next/router";
 import { useRouter } from 'next/navigation';
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const DEFAULT_DATA = {
     city: {
-        name: "name_b1a05f310bb7",
-        state: "state_150b6dca5344",
-        country: "country_fc9c2a1c805d",
+        name: "Mumbai",
+        state: "MH",
+        country: "IND",
     },
     temperatureList: [
-        { date: "12-02-2025", min: "10", max: "20", avg: "15" },
-        { date: "12-02-2025", min: "11", max: "21", avg: "16" },
+        // { date: "12-02-2025", min: "10", max: "20", avg: "15" },
+        // { date: "12-02-2025", min: "11", max: "21", avg: "16" },
     ],
 };
 
@@ -90,19 +92,32 @@ const Page = () => {
         console.log("Final json: ", JSON.stringify(payload, null, 2))
     };
 
-    const postData = () => {
-        axios.post("http://localhost:8081/api/v1/add", output, {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then((resp) => {
-            console.log(resp)
-        }).catch((error) => {
-            console.log(error)
-        })
-        rounter.push("/")
-        
-    }
+    const postData = async () => {
+        try {
+            const resp = await axios.post(
+                "http://localhost:8081/api/v1/add",
+                output, // ⚠️ make sure this is a JSON object, not string
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            console.log(resp);
+            toast.success("City added successfully 🚀");
+
+            // sleep for 3 seconds
+            await new Promise((resolve) => setTimeout(resolve, 3000));
+
+            rounter.push("/");
+        } catch (error) {
+            console.error(error);
+            toast.error(`Failed to add city ❌ ${error.code}`);
+        }
+    };
+
+
 
     return (
         <div className="mx-auto max-w-4xl p-6">
@@ -153,7 +168,7 @@ const Page = () => {
                         <section className="grid gap-4">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-lg font-semibold">Temperature List</h3>
-                                <Button type="button" variant="secondary" onClick={addTempRow} className="rounded-2xl">
+                                <Button type="button" variant="secondary" onClick={addTempRow} className="rounded-2xl cursor-pointer hover:scale-110 transition">
                                     <Plus className="mr-2 h-4 w-4" /> Add Row
                                 </Button>
                             </div>
@@ -176,9 +191,10 @@ const Page = () => {
                                                     value={toEmptySafeString(row.date)}
                                                     onChange={(e) => updateTemp(idx, "date", e.target.value)}
                                                     placeholder="12-02-2025"
+                                                    type={"date"}
                                                 />
                                             </div>
-                                            <div className="md:col-span-3 grid gap-2">
+                                            <div className="md:col-span-2 grid gap-2">
                                                 <Label htmlFor={`min-${idx}`}>Min</Label>
                                                 <Input
                                                     id={`min-${idx}`}
@@ -189,7 +205,7 @@ const Page = () => {
                                                     inputMode="numeric"
                                                 />
                                             </div>
-                                            <div className="md:col-span-3 grid gap-2">
+                                            <div className="md:col-span-2 grid gap-2">
                                                 <Label htmlFor={`max-${idx}`}>Max</Label>
                                                 <Input
                                                     id={`max-${idx}`}
@@ -211,14 +227,17 @@ const Page = () => {
                                                     inputMode="numeric"
                                                 />
                                             </div>
-                                            <div className="md:col-span-1 flex items-end justify-end">
+                                            <div className="md:col-span-2 grid gap-2">
+                                                <Label htmlFor={`avg-${idx}`}>Action</Label>
                                                 <Button
                                                     type="button"
                                                     variant="destructive"
                                                     onClick={() => removeTempRow(idx)}
+                                                    className={"cursor-pointer hover:scale-110 transition-all"}
 
                                                 >
-                                                    <Trash2 className="ml-5" /> Remove
+                                                    Remove
+                                                    {/* <Trash2 className="ml-5 bg-red-400" /> Remove */}
                                                 </Button>
                                             </div>
                                         </div>
@@ -229,8 +248,8 @@ const Page = () => {
                     </CardContent>
 
                     <CardFooter className="flex flex-col items-stretch gap-4">
-                        <div className="flex items-center justify-end gap-3">
-                            <Button type="submit" className="rounded-2xl">Submit</Button>
+                        <div className="flex items-center justify-end gap-3 mt-5">
+                            <Button type="submit" className="rounded-2xl cursor-pointer hover:scale-110 transition-all">Submit and View Preview</Button>
                         </div>
 
                         <section className="grid gap-2">
@@ -241,9 +260,10 @@ const Page = () => {
                         </section>
                     </CardFooter>
                 </form>
-                <Button variant={"outline"} className={"mt-5 hover:scale-100 transition-all"} onClick={postData} >Add city</Button>
+                <Button variant={"outline"} className={"mt-5 hover:scale-100 transition-all cursor-pointer"} onClick={postData} >Add city</Button>
             </Card>
 
+            <ToastContainer />
         </div>
     );
 };

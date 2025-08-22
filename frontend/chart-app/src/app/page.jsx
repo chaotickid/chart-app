@@ -5,6 +5,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast, ToastContainer } from "react-toastify";
 
 const cityData = {
   city: {
@@ -57,6 +58,7 @@ export default function Home() {
       .then((resp) => {
         console.log("Get resp data: ", resp.data);
         updateCityData(resp.data)
+        toast.success("Fetched data successfully")
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -97,9 +99,10 @@ export default function Home() {
           {cityData.city.name} Temperature Trend
         </h1>
         <TemperatureChart data={cityData.temperatureList} />
+        
       </> : <></>}
 
-
+<ToastContainer></ToastContainer>
     </div>
   );
 }
