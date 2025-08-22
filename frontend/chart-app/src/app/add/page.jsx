@@ -114,6 +114,9 @@ const Page = () => {
         } catch (error) {
             console.error(error);
             toast.error(`Failed to add city ❌ ${error.code}`);
+            // 🔊 play error sound
+    const audio = new Audio("/error.mp3"); 
+    audio.play().catch((err) => console.warn("Audio play failed:", err));
         }
     };
 

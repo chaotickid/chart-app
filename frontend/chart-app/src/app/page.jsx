@@ -59,9 +59,15 @@ export default function Home() {
         console.log("Get resp data: ", resp.data);
         updateCityData(resp.data)
         toast.success("Fetched data successfully")
+        // 🔊 play error sound
+            const audio = new Audio("/success.mp3");
+            audio.play().catch((err) => console.warn("Audio play failed:", err));
       })
       .catch((error) => {
         console.error("Error:", error);
+        // 🔊 play error sound
+    const audio = new Audio("/error.mp3"); 
+    audio.play().catch((err) => console.warn("Audio play failed:", err));
       });
   };
 
@@ -95,7 +101,7 @@ export default function Home() {
       </Button>
 
       {cityData != null ? <>
-        <h1 className="text-xl font-bold mb-4">
+        <h1 className="text-xl font-bold mb-4 mt-5">
           {cityData.city.name} Temperature Trend
         </h1>
         <TemperatureChart data={cityData.temperatureList} />
